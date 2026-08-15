@@ -175,6 +175,40 @@ covered by "Agent autonomy discipline" above, not repeated here.
   `/spec` per part rather than one mega-spec covering all of it. A spec
   that needs "and also" to describe itself is two specs.
 
+## Definition of done: evaluation criteria for a high-quality product
+
+Before calling a change finished, check it against these. This is an index
+of gates that already exist elsewhere in this file, not a new rulebook — if
+a criterion here doesn't map to something checkable in another section,
+it's not precise enough to use.
+
+1. **Matches the interviewed intent.** Does what the real goal required —
+   not just the literal words of the ask (see "Project intake" above).
+2. **Passes the automated gates.** `bun test` clean; `bun run test:evals`
+   gate tier clean before shipping (see "Testing"). A failing eval is never
+   waved off as pre-existing without proof it also fails on the base branch
+   (see "E2E eval failure blame protocol").
+3. **Holds up under Karpathian minimalism.** No premature abstraction, no
+   dead code, no speculative config (see "Code minimalism and
+   hackability"). Genuine `slop-scan` findings fixed, gamed ones left
+   alone (see "Slop-scan").
+4. **Key decisions were verified, not inferred.** Consequential calls got
+   an explicit answer, not an assumption (see "Agent autonomy
+   discipline"). Durable ones are logged via `gstack-decision-log` (see
+   "Cross-session decision memory").
+5. **Clean at every sink.** `gstack-redact` clean on the exact bytes sent
+   (see "Redaction guard"); any new off-machine send, SSE endpoint, or
+   Unicode-bearing egress wired through the required helpers if the change
+   touches that surface (see "Browser interaction").
+6. **Commits are bisected.** One logical change per commit (see "Commit
+   style").
+7. **CHANGELOG and VERSION match the change**, if user-facing — bump
+   scaled to the diff, entry written in the release-summary format with
+   real numbers (see "CHANGELOG + VERSION style").
+8. **No hardcoded assumptions.** Framework- or OS-specific paths avoided
+   where the surface is meant to be general (see "Platform-agnostic
+   design").
+
 ## Project structure
 
 ```
