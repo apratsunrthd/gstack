@@ -222,6 +222,29 @@ it's not precise enough to use.
    the output is correct; a Codex disagreement gets resolved or explicitly
    overridden with a stated reason, not silently ignored.
 
+## Gap audit protocol
+
+When asked to audit this repo's own coherence — CLAUDE.md, the knowledge
+base (auto-memory), skills, and guardrails — for gaps:
+
+1. **Check for drift between prose and enforcement.** Does anything
+   CLAUDE.md mandates actually get invoked by a skill, tested by a
+   tripwire, or enforced by a hook — or does it only exist as text a
+   session might or might not read? Grep the actual `.tmpl`/`.ts`
+   resolver source, not just literal `.tmpl` text — resolvers inject
+   content that a plain `.tmpl` grep misses (see the "Karpathian
+   engineering principles" > "First-principles / build-to-understand"
+   discipline: read the source, don't assume from a surface search).
+2. **Report the top N gaps found**, each as: the exact file, the specific
+   problem (not a category), and the exact fix — concrete enough to
+   implement without further research.
+3. **Separately, flag which risky actions rely on model compliance alone**
+   rather than a `hooks.PreToolUse`/`PostToolUse` entry — those are the
+   ones a differently-instructed or compromised session could bypass.
+4. **Do not implement fixes without confirmation.** A gap audit is a
+   report; each fix is its own decision to verify explicitly (see "Agent
+   autonomy discipline" above).
+
 ## Project structure
 
 ```
