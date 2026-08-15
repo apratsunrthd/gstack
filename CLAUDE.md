@@ -208,6 +208,13 @@ it's not precise enough to use.
 8. **No hardcoded assumptions.** Framework- or OS-specific paths avoided
    where the surface is meant to be general (see "Platform-agnostic
    design").
+9. **Complex builds get a second system's agreement.** If the work would
+   earn a MINOR or MAJOR version bump under "CHANGELOG + VERSION style"
+   (substantial new capability, coordinated multi-file change, or a
+   breaking change — not a small PATCH-scale fix), run the final diff
+   through `/codex review` before calling it done. Both systems must agree
+   the output is correct; a Codex disagreement gets resolved or explicitly
+   overridden with a stated reason, not silently ignored.
 
 ## Project structure
 
