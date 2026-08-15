@@ -52,6 +52,8 @@ echo '{"skill":"careful","ts":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","repo":"'$(base
 | `git checkout .` / `git restore .` | `git checkout .` | Uncommitted work loss |
 | `kubectl delete` | `kubectl delete pod` | Production impact |
 | `docker rm -f` / `docker system prune` | `docker system prune -a` | Container/image loss |
+| `git commit`/`push` `--no-verify` / `--no-gpg-sign` | `git push --no-verify` | Skips hooks, including the redaction guard |
+| `GSTACK_REDACT_PREPUSH=skip` | `GSTACK_REDACT_PREPUSH=skip git push` | Disables the redaction guard's pre-push scan |
 
 ## Safe exceptions
 

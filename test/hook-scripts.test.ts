@@ -387,6 +387,37 @@ describe('check-careful.sh', () => {
     });
   });
 
+  // --- Redaction-guard bypasses ---
+
+  describe('redaction guard bypasses', () => {
+    test('git push --no-verify warns', () => {
+      const { exitCode, output } = runHook(CAREFUL_SCRIPT, carefulInput('git push --no-verify origin main'));
+      expect(exitCode).toBe(0);
+      expect(output.hookSpecificOutput?.permissionDecision).toBe('ask');
+      expect(output.hookSpecificOutput?.permissionDecisionReason).toContain('redaction guard');
+    });
+
+    test('git commit --no-gpg-sign warns', () => {
+      const { exitCode, output } = runHook(CAREFUL_SCRIPT, carefulInput('git commit --no-gpg-sign -m "wip"'));
+      expect(exitCode).toBe(0);
+      expect(output.hookSpecificOutput?.permissionDecision).toBe('ask');
+      expect(output.hookSpecificOutput?.permissionDecisionReason).toContain('redaction guard');
+    });
+
+    test('GSTACK_REDACT_PREPUSH=skip warns', () => {
+      const { exitCode, output } = runHook(CAREFUL_SCRIPT, carefulInput('GSTACK_REDACT_PREPUSH=skip git push origin main'));
+      expect(exitCode).toBe(0);
+      expect(output.hookSpecificOutput?.permissionDecision).toBe('ask');
+      expect(output.hookSpecificOutput?.permissionDecisionReason).toContain('redaction guard');
+    });
+
+    test('plain git push does not warn', () => {
+      const { exitCode, output } = runHook(CAREFUL_SCRIPT, carefulInput('git push origin main'));
+      expect(exitCode).toBe(0);
+      expect(output.hookSpecificOutput).toBeUndefined();
+    });
+  });
+
   // --- Safe commands ---
 
   describe('safe commands allow without warning', () => {
