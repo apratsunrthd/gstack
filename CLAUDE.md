@@ -97,6 +97,74 @@ bun run test:evals   # run before shipping — paid, diff-based (~$4/run max)
 integration tests. `bun run test:evals` runs LLM-judge quality evals and E2E
 tests via `claude -p`. Both must pass before creating a PR.
 
+## Karpathian engineering principles
+
+These are durable rules, not vibes — they apply to every session in this repo,
+human or agent. They sit on top of (don't replace) ETHOS.md's builder
+philosophy and the "Search before building" / "AI effort compression"
+sections below; where they overlap, treat this section as the sharper edge.
+
+### Code minimalism and hackability
+
+- Keep code simple, small, readable, and hackable — favor code that fits in
+  your head over code that's "correctly" abstracted for cases that don't
+  exist yet. This is the nanoGPT/micrograd standard: a competent engineer
+  should be able to read the whole thing in one sitting.
+- Resist premature abstraction, unnecessary configurability, and
+  over-generality. Three similar call sites beat one flexible framework built
+  for a fourth that hasn't shown up.
+- Delete aggressively when something is unused — no dead code, no speculative
+  extension points, no "just in case" flags.
+- This sharpens (doesn't duplicate) the "Don't add features, refactor, or
+  introduce abstractions beyond what the task requires" guidance and the
+  slop-scan discipline elsewhere in this file — same instinct, applied harder.
+
+### Agent autonomy discipline
+
+- Every AI-authored diff gets actually read before it's treated as done —
+  by you or a `/review` pass — before merge or ship. Tests passing is not
+  the same as understanding what changed; don't let it substitute.
+- Default to a conservative autonomy level for consequential changes
+  (schema/migration, auth, payment, destructive ops, anything touching
+  production or shared state): state the plan, get explicit confirmation,
+  then execute. Only ratchet autonomy up in domains with tight, fast feedback
+  loops (typecheck, hermetic E2E, `bun test`) where a wrong move is cheap to
+  catch and revert.
+- Never write "the agent generated this" as justification in a commit message
+  or PR description. State what changed and why, in terms that show you
+  understand it — not a restatement of what the agent claims it did.
+- This is the practice behind this file's "Executing actions with care"
+  system guidance and the redaction / community-PR guardrails elsewhere in
+  this file — those are backstops for when this discipline slips, not a
+  substitute for it.
+
+### First-principles / build-to-understand
+
+- Before pulling in a dependency for a mechanism that's core to what gstack
+  does (not incidental plumbing), understand it well enough to have built a
+  rough version yourself — so failure modes are legible later, not just API
+  surface.
+- When something core breaks, read the library's source before its docs. If
+  you can't explain WHY a fix works, you haven't found the fix yet — go one
+  level deeper.
+- This is Layer 3 in "Search before building" below (see that section) —
+  prize it, but the ETHOS.md distinction still governs scope: reinventing
+  solved infrastructure (HTTP servers, crypto primitives) is not this
+  principle, it's wasted motion.
+
+### English-as-code / spec-first
+
+- For anything beyond a trivial change, state the intent in plain English
+  before touching code: what should be true when this is done, what breaks
+  if it's wrong. Use `/spec` for anything that will outlive the current
+  session or needs a GitHub issue.
+- Treat the stated intent as the source of truth and the code as a compiled
+  artifact of it. When code and intent diverge, intent wins — fix the code,
+  don't rationalize what the code happens to do.
+- This principle is why CHANGELOG entries and PR descriptions read as plain
+  English outcomes, not implementation narration — see "CHANGELOG + VERSION
+  style" below for the concrete voice rules that follow from it.
+
 ## Project structure
 
 ```
