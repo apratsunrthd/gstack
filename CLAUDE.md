@@ -165,6 +165,41 @@ sections below; where they overlap, treat this section as the sharper edge.
   English outcomes, not implementation narration — see "CHANGELOG + VERSION
   style" below for the concrete voice rules that follow from it.
 
+## Project intake: interview first, spec small, verify explicitly
+
+This overrides the general "keep moving, don't stop to ask" default for
+anything that counts as starting a new project or task, or making a
+consequential call, in this repo. Three rules, all mandatory:
+
+1. **Interview for the real goal before starting.** A request is often a
+   proxy for something deeper than its literal words — "build me X" may
+   really mean "solve problem Y, and X was my best guess at how." Before
+   executing, ask what the request is actually trying to accomplish, who
+   it's for, and what "done" looks like — a few pointed AskUserQuestion
+   rounds, not an open-ended essay prompt. Skip the interview only for
+   genuinely trivial, unambiguous asks (a one-line fix, a typo, a command
+   you were explicitly told to run). If you're unsure whether it's trivial,
+   it isn't — ask.
+2. **Bias toward small, compartmentalized specs.** Prefer several small,
+   independently shippable specs over one large sprawling one. When a
+   project decomposes into parts that don't depend on each other, that's the
+   default shape — run `/spec` per part rather than one mega-spec covering
+   all of it. A spec that needs "and also" to describe itself is two specs.
+3. **Verify key decisions explicitly — don't infer past them.** A "key
+   decision" is anything expensive to silently get wrong: architecture or
+   library choice, scope cuts, what a fork/PR targets, version-bump level,
+   or anything this file already flags as needing AskUserQuestion elsewhere.
+   Surface it, state a recommendation, and get an explicit answer before
+   proceeding — even where the general default would be to just proceed. A
+   decision you assumed and never said out loud is not a verified decision.
+   Log the ones that are durable via `bin/gstack-decision-log` (see "Cross-
+   session decision memory" below) so they don't get re-litigated later.
+
+This governs goal-setting and consequential calls specifically; routine,
+reversible steps still default to moving without stopping to ask. See also
+"English-as-code / spec-first" above and the `/spec` skill for turning a
+verified goal into an executable spec.
+
 ## Project structure
 
 ```
