@@ -101,8 +101,8 @@ tests via `claude -p`. Both must pass before creating a PR.
 
 These are durable rules, not vibes — they apply to every session in this repo,
 human or agent. They sit on top of (don't replace) ETHOS.md's builder
-philosophy and the "Search before building" / "AI effort compression"
-sections below; where they overlap, treat this section as the sharper edge.
+philosophy; the first-principles / build-to-understand discipline lives in
+"Search before building" below rather than repeated here.
 
 ### Code minimalism and hackability
 
@@ -115,42 +115,31 @@ sections below; where they overlap, treat this section as the sharper edge.
   for a fourth that hasn't shown up.
 - Delete aggressively when something is unused — no dead code, no speculative
   extension points, no "just in case" flags.
-- This sharpens (doesn't duplicate) the "Don't add features, refactor, or
-  introduce abstractions beyond what the task requires" guidance and the
-  slop-scan discipline elsewhere in this file — same instinct, applied harder.
+- This is the same instinct as the slop-scan discipline below (see
+  "Slop-scan") — applied by default, not just when the scanner flags it.
 
 ### Agent autonomy discipline
 
 - Every AI-authored diff gets actually read before it's treated as done —
   by you or a `/review` pass — before merge or ship. Tests passing is not
   the same as understanding what changed; don't let it substitute.
-- Default to a conservative autonomy level for consequential changes
-  (schema/migration, auth, payment, destructive ops, anything touching
-  production or shared state): state the plan, get explicit confirmation,
-  then execute. Only ratchet autonomy up in domains with tight, fast feedback
-  loops (typecheck, hermetic E2E, `bun test`) where a wrong move is cheap to
-  catch and revert.
+- Default to a conservative autonomy level for consequential changes:
+  schema/migration, auth, payment, destructive ops, anything touching
+  production or shared state, or any call that would be expensive to
+  silently get wrong (architecture/library choice, scope cuts, what a
+  fork/PR targets, version-bump level). State the plan or recommendation and
+  get an explicit answer before executing — a decision you assumed and never
+  said out loud is not a verified one. Only ratchet autonomy up in domains
+  with tight, fast feedback loops (typecheck, hermetic E2E, `bun test`)
+  where a wrong move is cheap to catch and revert.
 - Never write "the agent generated this" as justification in a commit message
   or PR description. State what changed and why, in terms that show you
   understand it — not a restatement of what the agent claims it did.
-- This is the practice behind this file's "Executing actions with care"
-  system guidance and the redaction / community-PR guardrails elsewhere in
-  this file — those are backstops for when this discipline slips, not a
+- Log durable decisions via `bin/gstack-decision-log` (see "Cross-session
+  decision memory" below) so verified calls don't get re-litigated. This is
+  the discipline behind the redaction guard and community-PR guardrails
+  elsewhere in this file — those are backstops for when it slips, not a
   substitute for it.
-
-### First-principles / build-to-understand
-
-- Before pulling in a dependency for a mechanism that's core to what gstack
-  does (not incidental plumbing), understand it well enough to have built a
-  rough version yourself — so failure modes are legible later, not just API
-  surface.
-- When something core breaks, read the library's source before its docs. If
-  you can't explain WHY a fix works, you haven't found the fix yet — go one
-  level deeper.
-- This is Layer 3 in "Search before building" below (see that section) —
-  prize it, but the ETHOS.md distinction still governs scope: reinventing
-  solved infrastructure (HTTP servers, crypto primitives) is not this
-  principle, it's wasted motion.
 
 ### English-as-code / spec-first
 
@@ -165,11 +154,12 @@ sections below; where they overlap, treat this section as the sharper edge.
   English outcomes, not implementation narration — see "CHANGELOG + VERSION
   style" below for the concrete voice rules that follow from it.
 
-### Project intake: interview first, spec small, verify explicitly
+### Project intake: interview first, spec small
 
 This overrides the general "keep moving, don't stop to ask" default for
-starting a new project/task or making a consequential call — routine,
-reversible steps still default to moving without asking.
+starting a new project or task — routine, reversible steps still default to
+moving without asking. Verifying consequential decisions along the way is
+covered by "Agent autonomy discipline" above, not repeated here.
 
 - **Interview for the real goal before starting.** A request is often a
   proxy for something deeper than its literal words — "build me X" may
@@ -184,14 +174,6 @@ reversible steps still default to moving without asking.
   project decomposes into parts that don't depend on each other, run
   `/spec` per part rather than one mega-spec covering all of it. A spec
   that needs "and also" to describe itself is two specs.
-- **Verify key decisions explicitly — don't infer past them.** A "key
-  decision" is anything expensive to silently get wrong: architecture or
-  library choice, scope cuts, what a fork/PR targets, version-bump level,
-  or anything this file already flags as needing AskUserQuestion. Surface
-  it, state a recommendation, and get an explicit answer before proceeding.
-  A decision you assumed and never said out loud is not a verified
-  decision. Log the durable ones via `bin/gstack-decision-log` (see
-  "Cross-session decision memory" below) so they don't get re-litigated.
 
 ## Project structure
 
@@ -943,8 +925,14 @@ infrastructure, or anything where the runtime/framework might have a built-in:
 3. Check official runtime/framework docs
 
 Three layers of knowledge: tried-and-true (Layer 1), new-and-popular (Layer 2),
-first-principles (Layer 3). Prize Layer 3 above all. See ETHOS.md for the full
-builder philosophy.
+first-principles (Layer 3). Prize Layer 3 above all — but when the mechanism
+is core to what gstack does (not incidental plumbing), "prize it" means
+understanding it well enough to have built a rough version yourself, not just
+having read about it. When something core breaks, read the library's source
+before its docs; if you can't explain WHY a fix works, you haven't found the
+fix yet. Reinventing solved infrastructure (HTTP servers, crypto primitives)
+is not this principle, it's wasted motion. See ETHOS.md for the full builder
+philosophy and where that line sits.
 
 ## Local plans
 
