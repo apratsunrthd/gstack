@@ -154,7 +154,7 @@ philosophy; the first-principles / build-to-understand discipline lives in
   English outcomes, not implementation narration — see "CHANGELOG + VERSION
   style" below for the concrete voice rules that follow from it.
 
-### Project intake: interview first, spec small
+### Project intake: interview first, define the bar, spec small
 
 This overrides the general "keep moving, don't stop to ask" default for
 starting a new project or task — routine, reversible steps still default to
@@ -169,6 +169,12 @@ covered by "Agent autonomy discipline" above, not repeated here.
   prompt. Skip only for genuinely trivial, unambiguous asks (a one-line fix,
   a typo, a command you were explicitly told to run); if you're unsure
   whether it's trivial, it isn't — ask.
+- **Define precise, task-specific success criteria before starting.**
+  Beyond the standing checklist (see "Definition of done"), write down what
+  "great" means for this specific task — measurable properties, not just
+  topic coverage. Where a past example exists in this repo (a merged PR, an
+  existing skill template, a prior CHANGELOG entry), use its format as the
+  template to match rather than inventing a new structure from scratch.
 - **Bias toward small, compartmentalized specs.** Prefer several small,
   independently shippable specs over one large sprawling one. When a
   project decomposes into parts that don't depend on each other, run
