@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/careful/bin/check-careful.sh\"",
+            "statusMessage": "Checking for destructive commands..."
+          }
+        ]
+      }
+    ]
+  }
+}
