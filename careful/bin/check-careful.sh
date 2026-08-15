@@ -154,6 +154,19 @@ if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'docker\s+(rm\s+-f|system\s+p
   PATTERN="docker_destructive"
 fi
 
+# git commit/push --no-verify or --no-gpg-sign (skips hooks, including the
+# redaction guard's pre-push scan)
+if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'git\s+(commit|push)\s+[^&|;]*(--no-verify|--no-gpg-sign)' 2>/dev/null; then
+  WARN="Destructive: --no-verify/--no-gpg-sign skips commit hooks, including the redaction guard. Confirm this is intentional."
+  PATTERN="git_skip_hooks"
+fi
+
+# GSTACK_REDACT_PREPUSH=skip (disables the redaction guard's pre-push hook)
+if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'GSTACK_REDACT_PREPUSH=skip' 2>/dev/null; then
+  WARN="Destructive: GSTACK_REDACT_PREPUSH=skip disables the redaction guard for this push. Confirm no secrets/PII are being sent."
+  PATTERN="redact_bypass"
+fi
+
 # --- Output ---
 if [ -n "$WARN" ]; then
   # Log hook fire event (pattern name only, never command content)

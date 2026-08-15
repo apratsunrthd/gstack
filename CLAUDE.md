@@ -170,7 +170,7 @@ covered by "Agent autonomy discipline" above, not repeated here.
   a typo, a command you were explicitly told to run); if you're unsure
   whether it's trivial, it isn't — ask.
 - **Define precise, task-specific success criteria before starting.**
-  Beyond the standing checklist (see "Definition of done"), write down what
+  Beyond the standing checklist (see "Repo definition of done"), write down what
   "great" means for this specific task — measurable properties, not just
   topic coverage. Where a past example exists in this repo (a merged PR, an
   existing skill template, a prior CHANGELOG entry), use its format as the
@@ -181,7 +181,7 @@ covered by "Agent autonomy discipline" above, not repeated here.
   `/spec` per part rather than one mega-spec covering all of it. A spec
   that needs "and also" to describe itself is two specs.
 
-## Definition of done: evaluation criteria for a high-quality product
+## Repo definition of done: evaluation criteria for a high-quality product
 
 Before calling a change finished, check it against these. This is an index
 of gates that already exist elsewhere in this file, not a new rulebook — if
