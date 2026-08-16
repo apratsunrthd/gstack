@@ -14,6 +14,7 @@ All of it lives in [`CLAUDE.md`](../CLAUDE.md), plus two small code changes. In 
 - **Gap audit protocol** — a reusable methodology for auditing this file's own coherence: check whether what CLAUDE.md mandates is actually enforced anywhere (a skill, a test, a hook) or just prose a session might skip, report gaps as file/problem/fix, and separately flag which risky actions rely on model compliance alone rather than a hook.
 - **`/careful`'s destructive-command hook is now always on** — it used to only run when `/careful` or `/guard` was explicitly invoked that session. A new `.claude/settings.json` wires the same `PreToolUse` hook to run on every Bash call in this repo by default.
 - **`careful/bin/check-careful.sh` covers two more bypasses** — `git commit`/`push --no-verify`/`--no-gpg-sign` and `GSTACK_REDACT_PREPUSH=skip`, the two ways CLAUDE.md's own redaction-guard section says the guard gets bypassed that the hook didn't check for.
+- **README install instructions point at this fork** — all three `git clone` commands (Claude Code, OpenClaw, other agents) now clone `apratsunrthd/gstack` instead of upstream `garrytan/gstack`, with a callout at the top of the Install section explaining the swap and how to get stock upstream instead.
 
 ## PR log
 
@@ -26,5 +27,7 @@ All of it lives in [`CLAUDE.md`](../CLAUDE.md), plus two small code changes. In 
 | [#5](https://github.com/apratsunrthd/gstack/pull/5) | Added precise success criteria + past-example matching to project intake |
 | [#6](https://github.com/apratsunrthd/gstack/pull/6) | Added the Gap audit protocol |
 | [#7](https://github.com/apratsunrthd/gstack/pull/7) | Three fixes found by running that protocol: renamed the definition-of-done section to stop colliding with `/spec`'s own "Definition of Done" field, closed the two redaction-bypass gaps in `check-careful.sh`, and made the destructive-command hook always-on for this repo |
+| [#8](https://github.com/apratsunrthd/gstack/pull/8) | Added this catalog (`docs/FORK_CHANGES.md`) and a banner in README.md pointing to it |
+| [#9](https://github.com/apratsunrthd/gstack/pull/9) | Repointed README's install instructions at this fork instead of upstream |
 
 All merged directly to this fork's `main` — none of it went upstream to `garrytan/gstack`.
