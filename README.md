@@ -1,5 +1,7 @@
 # gstack
 
+> **This is a personalized fork.** Everything below this banner is Garry Tan's original README. My own customizations — a Karpathian rule set added to `CLAUDE.md`, plus two small hook fixes — are cataloged in **[docs/FORK_CHANGES.md](docs/FORK_CHANGES.md)**, not described here.
+
 > "I don't think I've typed like a line of code probably since December, basically, which is an extremely large change." — [Andrej Karpathy](https://fortune.com/2026/03/21/andrej-karpathy-openai-cofounder-ai-agents-coding-state-of-psychosis-openclaw/), No Priors podcast, March 2026
 
 When I heard Karpathy say this, I wanted to find out how. How does one person ship like a team of twenty? Peter Steinberger built [OpenClaw](https://github.com/openclaw/openclaw) — 247K GitHub stars — essentially solo with AI agents. The revolution is here. A single builder with the right tooling can move faster than a traditional team.
@@ -444,6 +446,7 @@ Other references: [docs/gbrain-sync.md](docs/gbrain-sync.md) (sync-specific guid
 | [Browser Reference](BROWSER.md) | Full command reference for `/browse` |
 | [Contributing](CONTRIBUTING.md) | Dev setup, testing, contributor mode, and dev mode |
 | [Changelog](CHANGELOG.md) | What's new in every version |
+| [Fork Changes](docs/FORK_CHANGES.md) | What's customized in this fork vs. upstream |
 
 ## Privacy & Telemetry
 
