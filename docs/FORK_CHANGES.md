@@ -30,5 +30,6 @@ All of it lives in [`CLAUDE.md`](../CLAUDE.md), plus two small code changes. In 
 | [#7](https://github.com/apratsunrthd/gstack/pull/7) | Three fixes found by running that protocol: renamed the definition-of-done section to stop colliding with `/spec`'s own "Definition of Done" field, closed the two redaction-bypass gaps in `check-careful.sh`, and made the destructive-command hook always-on for this repo |
 | [#8](https://github.com/apratsunrthd/gstack/pull/8) | Added this catalog (`docs/FORK_CHANGES.md`) and a banner in README.md pointing to it |
 | [#9](https://github.com/apratsunrthd/gstack/pull/9) | Repointed README's install instructions at this fork instead of upstream |
+| [#10](https://github.com/apratsunrthd/gstack/pull/10) | Added the standing commit + PR policy (branch → commit → PR, never straight to `main`) |
 
 All merged directly to this fork's `main` — none of it went upstream to `garrytan/gstack`.
