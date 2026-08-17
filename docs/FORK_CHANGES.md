@@ -15,6 +15,7 @@ All of it lives in [`CLAUDE.md`](../CLAUDE.md), plus two small code changes. In 
 - **`/careful`'s destructive-command hook is now always on** — it used to only run when `/careful` or `/guard` was explicitly invoked that session. A new `.claude/settings.json` wires the same `PreToolUse` hook to run on every Bash call in this repo by default.
 - **`careful/bin/check-careful.sh` covers two more bypasses** — `git commit`/`push --no-verify`/`--no-gpg-sign` and `GSTACK_REDACT_PREPUSH=skip`, the two ways CLAUDE.md's own redaction-guard section says the guard gets bypassed that the hook didn't check for.
 - **README install instructions point at this fork** — all three `git clone` commands (Claude Code, OpenClaw, other agents) now clone `apratsunrthd/gstack` instead of upstream `garrytan/gstack`, with a callout at the top of the Install section explaining the swap and how to get stock upstream instead.
+- **Standing commit + PR policy** — material changes in this repo, or any repo with a GitHub remote, always get committed to a non-main branch and shipped via a PR automatically, never committed straight to `main`. Mirrored into the global `~/.claude/CLAUDE.md` (plus a Stop-hook backstop at `~/.claude/hooks/no-commits-on-main.sh`) so it applies outside this repo too — this section is the tracked, in-repo record of that decision.
 
 ## PR log
 
