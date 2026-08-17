@@ -662,6 +662,24 @@ determined leaker (a CHANGELOG line that does would fail a hostile screenshotter
 
 ## Commit style
 
+**Fork customization: always commit + PR, never commit to main.** This is a
+personal fork customization (see "this fork is being deliberately customized
+via CLAUDE.md, not upstreamed" — cross-session memory), not upstream gstack
+behavior. Material changes in this repo — or any repo with a GitHub remote —
+always get committed to a non-main branch and shipped via a PR, done
+automatically without asking per-instance. Never commit directly to `main`.
+This supersedes the general Claude Code default of asking before every
+commit; this instruction is the standing authorization. Destructive/history-
+rewriting git ops (force-push, `reset --hard`, amending pushed commits) still
+require explicit confirmation — this only pre-authorizes the ordinary
+branch → commit → push → PR path. PRs from this repo target the fork
+(`apratsunrthd/gstack`), never upstream (`garrytan/gstack`) — verify
+`gh repo set-default --view` says `apratsunrthd/gstack` before opening one;
+`gh pr create` defaults to the fork's parent otherwise. The mirrored,
+all-repos version of this policy (plus a Stop-hook backstop) lives in the
+global `~/.claude/CLAUDE.md` — this section documents it as a tracked fork
+customization; the global file is what actually enforces it outside this repo.
+
 **Always bisect commits.** Every commit should be a single logical change. When
 you've made multiple changes (e.g., a rename + a rewrite + new tests), split them
 into separate commits before pushing. Each commit should be independently
