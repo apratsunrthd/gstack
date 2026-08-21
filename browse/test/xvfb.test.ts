@@ -80,8 +80,14 @@ describe('isOurXvfb (PID validation)', () => {
       // On non-Linux, /proc is absent and both reads return '' → false either way.
       expect(isOurXvfb(child.pid, start || 'recorded')).toBe(false);
     } finally {
+      // Best-effort cleanup: under concurrent CI load (two shard processes
+      // both spawning/killing children), Bun's subprocess-exit bookkeeping
+      // has hit a transient "EBADF: bad file descriptor, epoll_ctl" here —
+      // the kill signal is already sent by the time this throws, so the
+      // assertion above (the actual thing under test) isn't affected by a
+      // cleanup-phase race.
       child.kill();
-      await child.exited;
+      await child.exited.catch(() => {});
     }
   });
 
