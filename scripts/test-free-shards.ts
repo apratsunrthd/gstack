@@ -303,12 +303,18 @@ const KNOWN_WINDOWS_SAFE: Array<{ file: string; reason: string }> = [
 export const DEFAULT_SHARD_COUNT = 20;
 // Per-test timeout passed to `bun test --timeout`. 30s matches what
 // package.json's `test` script used before it was repointed at this runner —
-// the runner is now the single owner of that semantic.
+// the runner is now the single owner of that semantic. Pinned as a literal
+// (test/test-free-shards.test.ts asserts this exact default) — do not read
+// env here. Runtime overrides go through effectiveFreeTestTimeoutMs() below.
+export const FREE_TEST_TIMEOUT_MS = 30_000;
 // Overridable via GSTACK_FREE_TEST_TIMEOUT_MS for weaker CI runners (e.g. this
 // fork's ubuntu-latest lane, which lacks the 8-vCPU headroom the 30s default
 // was tuned against) without loosening the fast wedge-diagnosis default
-// everywhere else.
-export const FREE_TEST_TIMEOUT_MS = Number(process.env.GSTACK_FREE_TEST_TIMEOUT_MS) || 30_000;
+// everywhere else. Kept separate from FREE_TEST_TIMEOUT_MS so the pinned
+// default stays a stable literal regardless of the environment a test runs in.
+export function effectiveFreeTestTimeoutMs(): number {
+  return Number(process.env.GSTACK_FREE_TEST_TIMEOUT_MS) || FREE_TEST_TIMEOUT_MS;
+}
 // External wall-clock deadline per spawned child (whole shard or the single
 // full-suite --parallel invocation). A wedged child — a spinning main thread
 // no in-process --timeout timer can interrupt — is SIGKILLed at the group
@@ -530,7 +536,7 @@ export function buildShardArgs(files: string[], options: BuildShardArgsOptions =
   // filters, so a relative `test/x.test.ts` would ALSO select
   // `browse/test/x.test.ts` — shard bleed that double-runs files.
   const selectors = exactTestFileSelectors(files, options.rootDir ?? ROOT);
-  const args = ['test', ...selectors, `--timeout=${FREE_TEST_TIMEOUT_MS}`];
+  const args = ['test', ...selectors, `--timeout=${effectiveFreeTestTimeoutMs()}`];
   if (options.parallel) args.push('--parallel');
   else args.push('--max-concurrency=1');
   return args;

@@ -15,6 +15,7 @@ import {
   FreeRunReporter,
   buildRunEpilogue,
   FREE_TEST_TIMEOUT_MS,
+  effectiveFreeTestTimeoutMs,
   DEFAULT_WALL_TIMEOUT_MS,
   PER_FILE_WALL_MS,
   wallTimeoutForShard,
@@ -166,7 +167,7 @@ describe('test-free-shards: shard args', () => {
     const args = buildShardArgs(['test/foo.test.ts'], { rootDir: ROOT });
     expect(args[0]).toBe('test');
     expect(args[1]).toBe(path.resolve(ROOT, 'test/foo.test.ts'));
-    expect(args).toContain(`--timeout=${FREE_TEST_TIMEOUT_MS}`);
+    expect(args).toContain(`--timeout=${effectiveFreeTestTimeoutMs()}`);
     expect(args).toContain('--max-concurrency=1');
     expect(args).not.toContain('--parallel');
   });
