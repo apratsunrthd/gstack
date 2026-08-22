@@ -184,23 +184,72 @@ Replace `<screen-name>` with a descriptive kebab-case name from the context gath
 ### Step 3a: Concept Generation
 
 Before any API calls, generate N text concepts describing each variant's design direction.
-Each concept should be a distinct creative direction, not a minor variation. Present them
-as a lettered list:
+Each concept should be a distinct creative direction, not a minor variation.
+
+**Cross-model diversification (when N >= 3):** One model asked for multiple directions
+tends to converge on its own stylistic priors even when told not to — real divergence
+comes from different models, not different prompts to the same model. Before drafting
+your own concepts, check what's available and try to source up to 2 of the N directions
+externally:
+
+```bash
+_HAS_CODEX=0
+command -v codex >/dev/null 2>&1 && codex login status >/dev/null 2>&1 && _HAS_CODEX=1
+_HAS_GEMINI=0
+if command -v gemini >/dev/null 2>&1 && { [ -n "$GEMINI_API_KEY" ] || [ -n "$GOOGLE_API_KEY" ]; }; then
+  _HAS_GEMINI=1
+fi
+echo "codex=$_HAS_CODEX gemini=$_HAS_GEMINI"
+```
+
+If `_HAS_CODEX=1` and/or `_HAS_GEMINI=1`, run the ones that are available **in parallel**
+(separate Bash tool calls in the same message, not sequential — each can take up to 90s):
+
+Codex direction:
+```bash
+_REPO_ROOT=$(git rev-parse --show-toplevel)
+PYTHON_CMD=$(command -v python3 2>/dev/null || command -v python 2>/dev/null)
+timeout 90 codex exec "Propose ONE distinct visual design direction for: {the design brief}. One line: a name plus a description of typography, color, and layout. No code, no reasoning — just the direction." -C "$_REPO_ROOT" -s read-only -c 'model_reasoning_effort="medium"' --json < /dev/null 2>/tmp/codex-concept-err.txt | "$PYTHON_CMD" -c "
+import sys, json
+for line in sys.stdin:
+    line = line.strip()
+    if not line: continue
+    try:
+        obj = json.loads(line)
+        if obj.get('type') == 'item.completed' and obj.get('item', {}).get('type') == 'agent_message':
+            print(obj['item'].get('text', ''))
+    except Exception:
+        pass
+"
+```
+
+Gemini direction:
+```bash
+timeout 90 gemini -p "Propose ONE distinct visual design direction for: {the design brief}. One line: a name plus a description of typography, color, and layout. No code, no reasoning — just the direction." --output-format stream-json --yolo > /tmp/gemini-concept.ndjson 2>/tmp/gemini-concept-err.txt
+jq -r 'select(.type=="message" and .role=="assistant") | .content' /tmp/gemini-concept.ndjson 2>/dev/null
+```
+
+If either errors, times out, or returns empty output, drop it silently — generate that
+direction yourself instead. Don't block on or retry a failed external call; this is a
+best-effort diversity boost, not a required step.
+
+Generate the remaining directions yourself, drawing on DESIGN.md, taste memory, and the
+user's request. Present all N as a lettered list, noting the source of any external
+direction so the user knows where each idea came from:
 
 ```
 I'll explore 3 directions:
 
 A) "Name" — one-line visual description of this direction
-B) "Name" — one-line visual description of this direction
-C) "Name" — one-line visual description of this direction
+B) "Name" — one-line visual description [Codex]
+C) "Name" — one-line visual description [Gemini]
 ```
 
-Draw on DESIGN.md, taste memory, and the user's request to make each concept distinct.
-
-**Anti-convergence directive (hard requirement):** Each variant MUST use a different
-font family, color palette, and layout approach. If two variants look like siblings
-— same typographic feel, overlapping color temperature, comparable layout rhythm —
-one of them failed. Regenerate the weaker one with a deliberately different direction.
+**Anti-convergence directive (hard requirement, applies to every direction regardless of
+source):** Each variant MUST use a different font family, color palette, and layout
+approach. If two variants look like siblings — same typographic feel, overlapping color
+temperature, comparable layout rhythm — one of them failed. Regenerate the weaker one
+with a deliberately different direction.
 
 Concrete test: if someone could swap the headline text between two variants without
 noticing, they're too similar. Variants should feel like they came from three
